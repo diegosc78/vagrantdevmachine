@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "[ubuntu.sh] Update sources... "
-#apt-get -y update
+apt-get -y update
 
 echo "[ubuntu.sh] Installing languages for ES... "
 # cd /usr/share/locales/ && sudo ./install-language-pack es_ES
