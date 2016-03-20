@@ -37,7 +37,7 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+config.vm.synced_folder "/", "/host"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -48,6 +48,8 @@ config.vm.provider "virtualbox" do |vb|
   vb.gui = true
   # Customize the amount of memory on the VM:
   vb.memory = "2048"
+  # Nombre
+  vb.name = "devdockerhost"
 end
   #
   # View the documentation for the provider you are using for more
@@ -64,5 +66,13 @@ end
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
 config.vm.provision "shell", path: "ubuntu.sh"
+
+config.vm.provision "file", source: "ubuntu.sh", destination: "/tmp/ubuntu.sh"
+
+config.vm.provision "docker" do |d|
+    d.pull_images "tomcat"
+end
+
+config.vm.provision :shell, inline: 'reboot'
 
 end
