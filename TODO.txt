@@ -1,0 +1,1 @@
+- Hacer escribible la carpeta compartida entre VB host y Win PC (/host/)
