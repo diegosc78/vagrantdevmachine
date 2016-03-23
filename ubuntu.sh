@@ -35,7 +35,6 @@ echo "tzdata tzdata/Zones/Europe select Madrid" | debconf-set-selections
 dpkg-reconfigure -f noninteractive tzdata
 
 
-#echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
 
 #reboot
 #localectl set-keymap --no-convert mapa_de_teclas
@@ -45,4 +44,5 @@ echo "[ubuntu.sh] Installing Basic command-line tools... "
 apt-get -y install curl git-core unzip vim nano wget subversion unrar rar
 
 echo "[ubuntu.sh] Installing LXDE... "
+echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
 apt-get -y install lubuntu-core lubuntu-icon-theme lubuntu-restricted-extras language-pack-gnome-es
