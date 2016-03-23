@@ -46,3 +46,21 @@ apt-get -y install curl git-core unzip vim nano wget subversion unrar rar
 echo "[ubuntu.sh] Installing LXDE... "
 echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
 apt-get -y install lubuntu-core lubuntu-icon-theme lubuntu-restricted-extras language-pack-gnome-es
+
+
+echo "[ubuntu.sh] Adding ppa repositories for devel tools... "
+add-apt-repository -y ppa:webupd8team/java
+add-apt-repository -y ppa:webupd8team/brackets
+add-apt-repository -y ppa:webupd8team/sublime-text-3
+apt-get -y update
+
+echo "[ubuntu.sh] Installing oracle java... "
+echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+apt-get -y install oracle-java8-installer
+
+echo "[ubuntu.sh] Installing java devel tools... "
+apt-get -y install brackets maven ant
+
+echo "[ubuntu.sh] Installing graphic tools... "
+apt-get -y install firefox filezilla lxterminal gedit gimp sublime-text-installer keepass2 meld
