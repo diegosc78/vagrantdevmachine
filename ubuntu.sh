@@ -66,3 +66,11 @@ apt-get -y netbeans-installer
 
 echo "[ubuntu.sh] Installing graphic tools... "
 apt-get -y install firefox filezilla lxterminal gedit gimp sublime-text-installer keepass2 meld
+
+#echo "[ubuntu.sh] Installing jenkins... "
+#wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
+#sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+#apt-get update
+#apt-get -y install jenkins
+#usermod -G docker jenkins
+
