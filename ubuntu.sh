@@ -62,7 +62,7 @@ apt-get -y install oracle-java8-installer
 
 echo "[ubuntu.sh] Installing java devel tools... "
 apt-get -y install brackets maven ant
-apt-get -y netbeans-installer
+apt-get -y install netbeans-installer
 
 echo "[ubuntu.sh] Installing graphic tools... "
 apt-get -y install firefox filezilla lxterminal gedit gimp sublime-text-installer keepass2 meld
