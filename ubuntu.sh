@@ -62,15 +62,104 @@ apt-get -y install oracle-java8-installer
 
 echo "[ubuntu.sh] Installing java devel tools... "
 apt-get -y install brackets maven ant
-apt-get -y netbeans-installer
+apt-get -y install netbeans-installer
 
 echo "[ubuntu.sh] Installing graphic tools... "
 apt-get -y install firefox filezilla lxterminal gedit gimp sublime-text-installer keepass2 meld
 
-#echo "[ubuntu.sh] Installing jenkins... "
-#wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
-#sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
-#apt-get update
-#apt-get -y install jenkins
-#usermod -G docker jenkins
+echo "[ubuntu.sh] Installing jenkins... "
+wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
+sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+apt-get update
+apt-get -y install jenkins
+usermod -G docker jenkins
+# JENKINS 8080
+
+
+
+echo "[ubuntu.sh] Installing mysql-server... "
+sudo debconf-set-selections <<< 'mysql-server-5.6 mysql-server/root_password password Change.1t'
+sudo debconf-set-selections <<< 'mysql-server-5.6 mysql-server/root_password_again password Change.1t'
+sudo apt-get -y install mysql-server-5.6
+
+echo "[ubuntu.sh] Installing sonar... "
+Q1="CREATE DATABASE IF NOT EXISTS sonarqube;"
+Q2="GRANT USAGE ON *.* TO sonarqube@localhost IDENTIFIED BY 'Change.1t';"
+Q3="GRANT ALL PRIVILEGES ON sonarqube.* TO sonarqube@localhost;"
+Q4="FLUSH PRIVILEGES;"
+SQL="${Q1}${Q2}${Q3}${Q4}"
+mysql -uroot -pChange.1t -e "$SQL"
+sh -c 'echo deb http://downloads.sourceforge.net/project/sonar-pkg/deb binary/ > /etc/apt/sources.list.d/sonarqube.list'
+apt-get update
+apt-get -y install sonar
+update-rc.d sonar defaults
+
+sudo -u sonar bash
+echo "#VAGRANT AUTO CFG" >> /opt/sonar/conf/sonar.properties
+echo "sonar.jdbc.username=sonarqube" >> /opt/sonar/conf/sonar.properties
+echo "sonar.jdbc.password=Change.1t" >> /opt/sonar/conf/sonar.properties
+echo "sonar.jdbc.url=jdbc:mysql://localhost:3306/sonarqube?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance" >> /opt/sonar/conf/sonar.properties
+exit
+service sonar start
+# SONAR 9000: admin/admin
+
+
+echo "[ubuntu.sh] Installing nexus... "
+nexus_tarball=latest-unix.tar.gz
+nexus_download_url=http://download.sonatype.com/nexus/3/$nexus_tarball
+groupadd --system nexus
+adduser \
+    --system \
+    --disabled-login \
+    --no-create-home \
+    --gecos '' \
+    --ingroup nexus \
+    --home /opt/nexus \
+    nexus
+install -d -o root -g nexus -m 750 /opt/nexus
+pushd /opt/nexus
+wget -q $nexus_download_url
+tar xf $nexus_tarball --strip-components 1
+rm $nexus_tarball
+chmod 700 nexus3
+chown -R nexus:nexus nexus3
+chmod 700 etc
+chown -R nexus:nexus etc # for some reason karaf changes files inside this directory. TODO see why.
+install -d -o nexus -g nexus -m 700 .java # java preferences are saved here (the default java.util.prefs.userRoot preference).
+cp -p etc/{nexus-default.properties,nexus.properties}
+sed -i -E 's,(application-host=).+,\1127.0.0.1,g' etc/nexus.properties
+sed -i -E 's,nexus-pro-,nexus-oss-,g' etc/nexus.properties
+sed -i -E 's,\.\./sonatype-work/,,g' bin/nexus.vmoptions
+echo -e "\nrun_as_user=nexus" >> bin/nexus.rc
+
+popd
+
+cat >/etc/systemd/system/nexus.service <<'EOF'
+[Unit]
+Description=Nexus
+After=network.target
+[Service]
+Type=simple
+User=nexus
+Group=nexus
+ExecStart=/opt/nexus/bin/nexus run
+WorkingDirectory=/opt/nexus
+Restart=always
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable nexus
+systemctl start nexus
+
+# configure nexus with the groovy script.
+#bash /vagrant/provision/execute-provision.groovy-script.sh
+
+# NEXUS 8081: admin/admin123
+
+
+
+# clean packages.
+apt-get -y autoremove
+apt-get -y clean
+
 
