@@ -24,6 +24,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provision "file", source: "ubuntu.sh", destination: "/tmp/ubuntu.sh"
+  config.vm.provision "file", source: "docker.sh", destination: "/tmp/docker.sh"
   config.vm.provision "file", source: "docker-compose.yaml", destination: "/tmp/docker-compose.yaml"
 
   config.vm.provision "shell", path: "ubuntu.sh"
@@ -33,8 +34,9 @@ Vagrant.configure(2) do |config|
     d.run "selenium-hub", args: "-p 4444:4444", image: "selenium/hub"
     d.run "selenium-node-ff", args: "--link selenium-hub:hub", image: "selenium/node-firefox"
     d.run "selenium-node-ch", args: "--link selenium-hub:hub", image: "selenium/node-chrome"
-
   end
+
+  config.vm.provision "shell", path: "docker.sh"
 
   config.vm.provision :shell, inline: 'reboot'
 
