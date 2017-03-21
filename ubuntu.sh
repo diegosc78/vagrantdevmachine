@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "[ubuntu.sh] Creating alternative user..."
+adduser --disabled-password --gecos "" vagrant sudo
+echo -e "ubuntu:ubuntu\nvagrant:vagrant" | sudo chpasswd
+
 echo "[ubuntu.sh] Update sources... "
 apt-get -y update
 
@@ -78,9 +82,9 @@ usermod -G docker jenkins
 
 
 echo "[ubuntu.sh] Installing mysql-server... "
-sudo debconf-set-selections <<< 'mysql-server-5.6 mysql-server/root_password password Change.1t'
-sudo debconf-set-selections <<< 'mysql-server-5.6 mysql-server/root_password_again password Change.1t'
-sudo apt-get -y install mysql-server-5.6
+sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password Change.1t'
+sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password Change.1t'
+sudo apt-get -y install mysql-server-5.7
 
 echo "[ubuntu.sh] Installing sonar... "
 Q1="CREATE DATABASE IF NOT EXISTS sonarqube;"
@@ -90,19 +94,16 @@ Q4="FLUSH PRIVILEGES;"
 SQL="${Q1}${Q2}${Q3}${Q4}"
 mysql -uroot -pChange.1t -e "$SQL"
 sh -c 'echo deb http://downloads.sourceforge.net/project/sonar-pkg/deb binary/ > /etc/apt/sources.list.d/sonarqube.list'
-apt-get update
-apt-get -y install sonar
-update-rc.d sonar defaults
+apt-get update && apt-get -y --allow-unauthenticated install sonar
 
 sudo -u sonar bash
 echo "#VAGRANT AUTO CFG" >> /opt/sonar/conf/sonar.properties
 echo "sonar.jdbc.username=sonarqube" >> /opt/sonar/conf/sonar.properties
 echo "sonar.jdbc.password=Change.1t" >> /opt/sonar/conf/sonar.properties
 echo "sonar.jdbc.url=jdbc:mysql://localhost:3306/sonarqube?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance" >> /opt/sonar/conf/sonar.properties
-exit
+update-rc.d sonar defaults
 service sonar start
 # SONAR 9000: admin/admin
-
 
 echo "[ubuntu.sh] Installing nexus... "
 nexus_tarball=latest-unix.tar.gz
