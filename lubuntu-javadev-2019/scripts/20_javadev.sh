@@ -65,5 +65,6 @@ inst_openjdk_java "11"
 inst_oracle_java8
 inst_javabuildtools
 inst_idevscode
-inst_idenetbeans
 inst_ideintellij
+inst_idenetbeans
+inst_ideeclipse

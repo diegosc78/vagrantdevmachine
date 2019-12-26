@@ -13,7 +13,8 @@ inst_node() {
 
 inst_nodebuildtools() {
     show_info "Installing node build tools... "
-#TODO grunt, 
+    npm install -g eslint
+    npm install -g grunt-cli
 }
 
 ## MAIN

@@ -77,20 +77,20 @@ inst_guitools() {
     show_info "Installing gui basic tools... "
     sys_wait_for_apt_lock
     apt-get update -y
-    apt-get -y install lxterminal terminator firefox filezilla keepass2 meld shutter 
+    apt-get -y install lxterminal terminator firefox google-chrome-stable filezilla keepass2 meld shutter putty xca
 
     add-apt-repository -y ppa:webupd8team/sublime-text-3
     apt-get update -y
     apt-get -y install sublime-text-installer
 
-    apt-get install -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" google-chrome-stable
-
     add-apt-repository ppa:unit193/encryption
     apt-get update -y
     apt-get -y install veracrypt
 
-
-    #TODO: xca, putty, anydesk
+    wget -qO - https://keys.anydesk.com/repos/DEB-GPG-KEY | apt-key add -
+    echo "deb http://deb.anydesk.com/ all main" | tee /etc/apt/sources.list.d/anydesk-stable.list
+    apt-get update -y
+    apt-get -y install anydesk
 }
 
 inst_lxde() {

@@ -25,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         v.customize ["modifyvm", :id, "--vtxvpid", "on"]
         v.customize ["modifyvm", :id, "--largepages", "on"]
         v.customize ["modifyvm", :id, "--acpi", "on"]
-        v.customize ["modifyvm", :id, "--groups", "/JVM Development"]
+        v.customize ["modifyvm", :id, "--groups", "/Devel Workstation"]
 
         # change the network card hardware for better performance
         v.customize ["modifyvm", :id, "--nictype1", "virtio"]
@@ -54,11 +54,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         devmachine.ssh.forward_agent = true        
 
         devmachine.vm.provision "10_ubuntu.sh", type: :shell, path: "scripts/10_ubuntu.sh", privileged: true
+        devmachine.vm.provision "20_javadev.sh", type: :shell, path: "scripts/20_javadev.sh", privileged: true
+        devmachine.vm.provision "30_nodedev.sh", type: :shell, path: "scripts/30_nodedev.sh", privileged: true
+        devmachine.vm.provision "40_docker.sh", type: :shell, path: "scripts/40_docker.sh", privileged: true
+        devmachine.vm.provision "50_office.sh", type: :shell, path: "scripts/50_office.sh", privileged: true
+        devmachine.vm.provision "99_cleanup.sh", type: :shell, path: "scripts/99_cleanup.sh", privileged: true
 
-        devmachine.vm.provision "docker" do |d|
-            d.pull_images "tomcat"
-        end
-        
         devmachine.vm.provision :shell, inline: 'reboot'
     end
 end
