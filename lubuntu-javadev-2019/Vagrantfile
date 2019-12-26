@@ -39,6 +39,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         v.customize ["modifyvm", :id, "--vram", "128"]
     end
 
+    if Vagrant.has_plugin?("vagrant-vbguest") then
+        config.vbguest.auto_update = true
+    end
+
     config.vm.define "devmachine" do |devmachine|
         devmachine.vm.box = IMAGE_NAME
         devmachine.vm.hostname = "devm"
@@ -47,11 +51,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         devmachine.vm.graceful_halt_timeout = 60
         devmachine.vm.post_up_message = "Login credentials are vagrant/vagrant"
         devmachine.vm.synced_folder ".", "/vagrant", disabled: false
-
-        devmachine.ssh.password = "vagrant"
-        devmachine.ssh.username = "vagrant"        
-        devmachine.ssh.insert_key = true
-        devmachine.ssh.forward_agent = true        
 
         devmachine.vm.provision "10_ubuntu.sh", type: :shell, path: "scripts/10_ubuntu.sh", privileged: true
         devmachine.vm.provision "20_javadev.sh", type: :shell, path: "scripts/20_javadev.sh", privileged: true
