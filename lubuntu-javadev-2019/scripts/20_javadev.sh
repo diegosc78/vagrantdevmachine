@@ -18,10 +18,11 @@ inst_oracle_java8() {
     apt-get -y install oracle-java8-installer
 }
 
-inst_openjdk_java8() {
-    show_info "Installing OpenJDK Java8... "
+inst_openjdk_java() {
+    show_info "Installing OpenJDK Java... "
+    local version=$1
     sys_wait_for_apt_lock
-    apt-get install -y openjdk-8-jdk-headless
+    apt-get install -y openjdk-$version-jdk >/dev/null 2>&1;
     JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
 #	ln -s ${JAVA_HOME} /usr/local/java
 #	cp $JAVA_RES_SH /etc/profile.d/java.sh
@@ -52,10 +53,17 @@ inst_idevscode() {
     apt-get -y install code
 }
 
+inst_ideeclipse() {
+    show_info "Installing IDE eclipse... "
+    apt-get install -y -q snapd
+    snap install eclipse --classic
+}
+
 ## MAIN
-inst_openjdk_java8
+inst_openjdk_java "8"
+inst_openjdk_java "11"
 inst_oracle_java8
 inst_javabuildtools
 inst_idevscode
-#inst_idenetbeans
+inst_idenetbeans
 inst_ideintellij

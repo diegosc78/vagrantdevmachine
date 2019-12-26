@@ -86,7 +86,16 @@ sys_cleanup(){
 	apt-get -y update && apt-get -y autoremove && apt-get -y clean && apt-get -y update
 }	
 
+sys_download(){
+    local url=$2
+    local file=$1
+    wget --progress=dot $url >/dev/null 2>&1
+}
 
+sys_install_package(){
+    local packages=$*
+    sudo apt-get install -y $packages >/dev/null 2>&1
+}
 
 
 #----- String and files manipulation functions -----#

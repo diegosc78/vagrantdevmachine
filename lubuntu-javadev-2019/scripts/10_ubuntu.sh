@@ -52,7 +52,7 @@ setup_spanish() {
 inst_clihttpclients() {
     show_info "Installing cli http client tools... "
     sys_wait_for_apt_lock
-    apt-get -y install curl wget apt-transport-https ca-certificates gnupg-agent software-properties-common
+    apt-get -y install curl wget apt-transport-https ca-certificates gnupg-agent software-properties-common make build-essential gnupg2
 }
 
 inst_clicompressors() {
@@ -76,10 +76,21 @@ inst_clieditors() {
 inst_guitools() {
     show_info "Installing gui basic tools... "
     sys_wait_for_apt_lock
-    apt-get -y install lxterminal terminator firefox filezilla keepass2 meld
+    apt-get update -y
+    apt-get -y install lxterminal terminator firefox filezilla keepass2 meld shutter 
 
     add-apt-repository -y ppa:webupd8team/sublime-text-3
+    apt-get update -y
     apt-get -y install sublime-text-installer
+
+    apt-get install -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" google-chrome-stable
+
+    add-apt-repository ppa:unit193/encryption
+    apt-get update -y
+    apt-get -y install veracrypt
+
+
+    #TODO: xca, putty, anydesk
 }
 
 inst_lxde() {
