@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # # vi: set ft=ruby :
 
-Vagrant.require_version ">= 2.0.0"
+Vagrant.require_version ">= 2.2.5"
 VAGRANTFILE_API_VERSION = "2"
 IMAGE_NAME = "ubuntu/bionic64"
 

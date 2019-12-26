@@ -2,8 +2,22 @@
 
 source ./commonFunctions.sh
 
+inst_guestadditions() {
+    show_info "Installing VirtualBox Guest Additions..."
+    sys_wait_for_apt_lock
+    apt-get --yes update && apt-get --yes install gcc make perl
+
+    local VBOX_VERSION=$(cat /home/vagrant/.vbox_version)
+    local VBOX_ISO=VBoxGuestAdditions_$VBOX_VERSION.iso
+    mount -o loop ${VBOX_ISO} /mnt
+    /mnt/VBoxLinuxAdditions.run
+    umount /mnt
+    rm -rf /home/vagrant/${VBOX_ISO}
+}
+
 setup_spanish() {
     show_info "Installing languages for ES... "
+    until sudo apt-get --yes update; do echo "Waiting for apt lock..."; sleep 5; done
     # cd /usr/share/locales/ && sudo ./install-language-pack es_ES
     apt-get -y install language-pack-es language-pack-es-base
 
@@ -35,69 +49,37 @@ setup_spanish() {
     dpkg-reconfigure -f noninteractive tzdata
 }
 
-
-inst_clidevtools() {
-    show_info "Installing basic command-line dev tools... "
-    apt-get -y install curl git-core unzip vim nano wget subversion unrar rar
-    add-apt-repository -y ppa:webupd8team/java
-    apt-get -y update
-    echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-    echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-    apt-get -y install oracle-java8-installer
-    apt-get -y install maven ant
+inst_clihttpclients() {
+    show_info "Installing cli http client tools... "
+    sys_wait_for_apt_lock
+    apt-get -y install curl wget apt-transport-https ca-certificates gnupg-agent software-properties-common
 }
 
-inst_guidevtools() {
-    show_info "Installing basic gui dev tools... "
+inst_clicompressors() {
+    show_info "Installing cli compressor tools... "
+    sys_wait_for_apt_lock
+    apt-get -y install zip unzip unrar rar p7zip-full
+}
+
+inst_cliversioncontroltools() {
+    show_info "Installing cli version control tools... "
+    sys_wait_for_apt_lock
+    apt-get -y install git stow subversion
+}
+
+inst_clieditors() {
+    show_info "Installing cli editor tools... "
+    sys_wait_for_apt_lock
+    apt-get -y install nano vim sed
+}
+
+inst_guitools() {
+    show_info "Installing gui basic tools... "
+    sys_wait_for_apt_lock
+    apt-get -y install lxterminal terminator firefox filezilla keepass2 meld
+
     add-apt-repository -y ppa:webupd8team/sublime-text-3
-    add-apt-repository -y ppa:vajdics/netbeans-installer
-
-    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-    install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
-    sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
-    apt-get install apt-transport-https
-    apt-get -y update
-
-    apt-get -y install code
-    apt-get -y install netbeans-installer
-
-    apt-get -y install filezilla lxterminal sublime-text-installer keepass2 meld    
-}
-
-inst_node() {
-    show_info "Installing node... "
-    apt-get install curl python-software-properties
-    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-    apt-get -y install nodejs
-    nodejs -v
-    npm -v    
-}
-
-inst_ansible() {
-    show_info "Installing ansible... "
-    apt-get -y install curl software-properties-common
-    apt-add-repository -y ppa:ansible/ansible && apt-get update
-    apt-get -y install ansible
-    echo "127.0.0.1" > /tmp/ansible_hosts
-    ansible all -i /tmp/ansible_hosts -m ping
-}
-
-inst_docker_amd64() {
-    show_info "Installing dockerCE... "
-    sudo apt-get -y remove docker docker-engine docker.io containerd runc
-    sudo apt-get -y update
-    sudo apt-get -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    sudo apt-get -y update
-    sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-    sudo docker run hello-world
-    sudo groupadd docker
-    sudo usermod -aG docker $USER
-    sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
-    sudo chmod g+rwx "$HOME/.docker" -R
-    docker run hello-world
-    sudo systemctl enable docker
+    apt-get -y install sublime-text-installer
 }
 
 inst_lxde() {
@@ -109,5 +91,11 @@ inst_lxde() {
 ## MAIN
 sys_full_upgrade
 setup_spanish
+inst_guestadditions
+inst_clihttpclients
+inst_clicompressors
+inst_cliversioncontroltools
+inst_clieditors
 inst_lxde
+inst_guitools
 

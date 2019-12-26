@@ -74,6 +74,10 @@ sys_sudocheck() {
     fi
 }
 
+sys_wait_for_apt_lock(){
+	until sudo apt-get --yes update; do echo "Waiting for apt lock..."; sleep 5; done
+}
+
 sys_full_upgrade(){
 	apt-get -y update && apt-get -y upgrade && apt-get -y dist-upgrade && apt-get -y autoremove && apt-get -y update
 }	
