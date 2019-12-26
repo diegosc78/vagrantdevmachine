@@ -16,6 +16,11 @@ inst_soapui() {
     rm SoapUI-5.5.0-linux-bin.tar.gz
 }
 
+inst_postman() {
+    show_info "Installing postman... "
+    snap install postman
+}
+
 inst_mqttexplorer() {
     show_info "Installing mqtt-explorer... "
     snap install mqtt-explorer
@@ -29,5 +34,6 @@ inst_rocketchat() {
 ## MAIN
 inst_squirrel
 inst_soapui
+inst_postman
 inst_mqttexplorer
 inst_rocketchat
