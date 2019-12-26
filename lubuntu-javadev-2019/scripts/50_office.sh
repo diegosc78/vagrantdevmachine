@@ -16,11 +16,11 @@ inst_dgrmodelio() {
 }
 
 inst_dgryed() {
-    show_info "Installing yed dgr tool... "
-    cd ~
-    sys_download https://www.yworks.com/resources/yed/demo/yEd-3.19.1.1_with-JRE13_64-bit_setup.sh
-    chmod +x yEd-3.19.1.1_with-JRE13_64-bit_setup.sh
-    ./yEd-3.19.1.1_with-JRE13_64-bit_setup.sh
+    show_info "Installing yed dgr tool in /opt... "
+    cd /opt
+    sys_download https://www.yworks.com/resources/yed/demo/yEd-3.19.1.1.zip
+    unzip yEd-3.19.1.1.zip
+    rm yEd-3.19.1.1.zip
 }
 
 #TODO balsamiq
@@ -28,6 +28,6 @@ inst_dgryed() {
 ## MAIN
 inst_libreoffice
 inst_dgrmodelio
-#inst_dgryed
+inst_dgryed
 
 
