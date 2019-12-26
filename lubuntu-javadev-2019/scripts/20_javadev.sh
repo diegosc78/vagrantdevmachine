@@ -31,7 +31,8 @@ inst_openjdk_java8() {
 
 inst_ideintellij() {
     show_info "Installing IDE intellij... "
-
+    apt-get install -y -q snapd
+    snap install intellij-idea-community --classic
 }
 
 inst_idenetbeans() {
