@@ -66,7 +66,7 @@ inst_squirrel() {
 inst_soapui() {
     show_info "Installing soapui in /opt... "
     cd /opt
-    sys_download https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz
+    wget https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz
     tar xvfz SoapUI-5.5.0-linux-bin.tar.gz
     rm SoapUI-5.5.0-linux-bin.tar.gz
 }
@@ -96,8 +96,9 @@ inst_ngrok(){
 }
 
 inst_jmeter(){
+    show_info "Installing jmeter in /opt... "
     cd /opt
-    sys_download http://us.mirrors.quenda.co/apache//jmeter/binaries/apache-jmeter-5.2.1.zip
+    wget http://us.mirrors.quenda.co/apache//jmeter/binaries/apache-jmeter-5.2.1.zip
     unzip apache-jmeter-5.2.1.zip
     rm apache-jmeter-5.2.1.zip
 }

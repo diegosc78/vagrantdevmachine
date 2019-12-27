@@ -62,7 +62,6 @@ cleanup_bash() {
 }
 
 ## MAIN
-sys_wait_for_apt_lock
 sys_cleanup
 cleanup_bash
 

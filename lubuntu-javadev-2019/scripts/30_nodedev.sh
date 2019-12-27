@@ -61,7 +61,7 @@ inst_node() {
     show_info "Installing node... "
     apt-get install curl python-software-properties
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-    apt-get -y install nodejs
+    apt-get -y install nodejs npm
     nodejs -v
     npm -v    
 }

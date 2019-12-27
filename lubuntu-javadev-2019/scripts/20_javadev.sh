@@ -93,9 +93,8 @@ inst_ideintellij() {
 
 inst_idenetbeans() {
     show_info "Installing IDE netbeans... "
-    sys_wait_for_apt_lock
-    add-apt-repository -y ppa:vajdics/netbeans-installer
-    apt-get -y install netbeans-installer    
+    apt-get install -y -q snapd
+    snap install netbeans --classic
 }
 
 inst_idevscode() {
