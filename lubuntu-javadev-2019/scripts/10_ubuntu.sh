@@ -108,7 +108,7 @@ setup_spanish() {
 inst_clihttpclients() {
     show_info "Installing cli http client tools... "
     sys_wait_for_apt_lock
-    apt-get -y install curl wget apt-transport-https ca-certificates gnupg-agent software-properties-common make build-essential gnupg2
+    apt-get -y install curl wget apt-transport-https ca-certificates gnupg-agent software-properties-common make build-essential gnupg2 jq
 }
 
 inst_clicompressors() {

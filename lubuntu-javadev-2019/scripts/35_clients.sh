@@ -59,7 +59,7 @@ sys_install_package(){
 
 inst_squirrel() {
     show_info "Installing squirrel SQL client... "
-    sys_wait_for_apt_lock
+    apt-get install -y -q snapd
     snap install squirrelsql
 }
 
@@ -73,17 +73,33 @@ inst_soapui() {
 
 inst_postman() {
     show_info "Installing postman... "
+    apt-get install -y -q snapd
     snap install postman
 }
 
 inst_mqttexplorer() {
     show_info "Installing mqtt-explorer... "
+    apt-get install -y -q snapd
     snap install mqtt-explorer
 }
 
 inst_rocketchat() {
     show_info "Installing rocket.chat... "
+    apt-get install -y -q snapd
     snap install rocketchat-desktop
+}
+
+inst_ngrok(){
+    show_info "Installing ngrok... "
+    apt-get install -y -q snapd
+    snap install ngrok
+}
+
+inst_jmeter(){
+    cd /opt
+    sys_download http://us.mirrors.quenda.co/apache//jmeter/binaries/apache-jmeter-5.2.1.zip
+    unzip apache-jmeter-5.2.1.zip
+    rm apache-jmeter-5.2.1.zip
 }
 
 ## MAIN
@@ -92,3 +108,5 @@ inst_soapui
 inst_postman
 inst_mqttexplorer
 inst_rocketchat
+inst_ngrok
+inst_jmeter

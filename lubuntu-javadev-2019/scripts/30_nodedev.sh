@@ -70,6 +70,9 @@ inst_nodebuildtools() {
     show_info "Installing node build tools... "
     npm install -g eslint
     npm install -g grunt-cli
+    npm install -g generator-jhipster
+    npm install -g yo
+    npm install -g yarn
 }
 
 ## MAIN

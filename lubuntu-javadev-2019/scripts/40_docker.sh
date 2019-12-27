@@ -97,4 +97,4 @@ inst_compose() {
 
 ## MAIN
 inst_docker_amd64
-
+inst_compose
