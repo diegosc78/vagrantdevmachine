@@ -151,12 +151,20 @@ inst_lxde() {
     show_info "Installing lxde... "
     echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections
     apt-get install -y --quiet ttf-mscorefonts-installer
-    apt-get -y install lubuntu-core lubuntu-icon-theme lubuntu-restricted-extras language-pack-gnome-es
+    apt-get -y install lubuntu-desktop lubuntu-core lubuntu-icon-theme lubuntu-restricted-extras language-pack-gnome-es
 }
 
+setup_system() {
+    show_info "System basic setup... "
+
+    sed -i -e '/Defaults\s\+env_reset/a Defaults\texempt_group=sudo' /etc/sudoers;
+    echo 'vagrant ALL=(ALL) NOPASSWD:ALL' >/etc/sudoers.d/99_vagrant;
+    chmod 440 /etc/sudoers.d/99_vagrant;
+}
 
 ## MAIN
 sys_full_upgrade
+#setup_system
 setup_spanish
 #inst_guestadditions
 inst_clihttpclients
