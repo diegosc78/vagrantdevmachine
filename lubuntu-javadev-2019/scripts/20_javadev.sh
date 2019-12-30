@@ -64,13 +64,18 @@ inst_javabuildtools() {
 }
 
 inst_oracle_java8() {
+    ## YA NO FUNCIONA !!!!
     show_info "Installing Oracle Java8... "
-    sys_wait_for_apt_lock
-    add-apt-repository -y ppa:webupd8team/java
-    apt-get -y update
-    echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-    echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-    apt-get -y install oracle-java8-installer
+#    sys_wait_for_apt_lock
+#    add-apt-repository -y ppa:webupd8team/java
+#    apt-get -y update
+#    echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+#    echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+#    apt-get -y install oracle-java8-installer
+
+    cd /opt
+    wget -c --content-disposition "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=239835_230deb18db3e4014bb8e3e8324f81b43"
+
 }
 
 inst_openjdk_java() {
