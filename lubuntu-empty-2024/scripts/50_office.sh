@@ -83,6 +83,6 @@ inst_dgryed() {
 ## MAIN
 inst_libreoffice
 inst_dgrmodelio
-inst_dgryed
+#inst_dgryed
 
 

@@ -131,7 +131,7 @@ inst_clieditors() {
 inst_guitools() {
     show_info "Installing gui basic tools... "
     wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
     sys_wait_for_apt_lock
     apt-get update -y
     apt-get -y install lxterminal terminator firefox google-chrome-stable filezilla keepass2 meld shutter putty xca
