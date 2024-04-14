@@ -1,8 +1,2 @@
-- Instalar herramientas cliente de manejo k8s (kubectl, helm, k9s, lens)
 - Externalizar a variables la configuración de lo que se instala y lo que no
-- KeepassXC
-- VSCode
-- Remmina
-- Zoom
-- Forticlient
 - Eliminar aplicaciones inútiles (pe. juegos)

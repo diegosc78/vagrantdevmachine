@@ -1,5 +1,16 @@
 #!/bin/bash
 
+#----- VARIABLES -----#
+DO_INSTALL_SQUIRREL=true
+DO_INSTALL_SOAPUI=true
+DO_INSTALL_POSTMAN=true
+DO_INSTALL_MQTTEXPLORER=false
+DO_INSTALL_NGROK=false
+DO_INSTALL_REMMINA=true
+DO_INSTALL_ZOOM=true
+DO_INSTALL_FORTICLIENT=true
+FORTICLIENT_VERSION="7.2"
+
 #----- Fancy Messages -----#
 show_error(){
     echo -e "\033[1;31m *** $@ ***\033[m" 1>&2
@@ -58,29 +69,37 @@ sys_install_package(){
 #------ Custom functions ----------#
 
 inst_squirrel() {
-    show_info "Installing squirrel SQL client... "
-    apt-get install -y -q snapd
-    snap install squirrelsql
+    if [ "$DO_INSTALL_SQUIRREL" = true ] ; then
+        show_info "Installing squirrel SQL client... "
+        apt-get install -y -q snapd
+        snap install squirrelsql
+    fi
 }
 
 inst_soapui() {
-    show_info "Installing soapui in /opt... "
-    cd /opt
-    wget https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz
-    tar xvfz SoapUI-5.5.0-linux-bin.tar.gz
-    rm SoapUI-5.5.0-linux-bin.tar.gz
+    if [ "$DO_INSTALL_SOAPUI" = true ] ; then
+        show_info "Installing soapui in /opt... "
+        cd /opt
+        wget https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz
+        tar xvfz SoapUI-5.5.0-linux-bin.tar.gz
+        rm SoapUI-5.5.0-linux-bin.tar.gz
+    fi
 }
 
 inst_postman() {
-    show_info "Installing postman... "
-    apt-get install -y -q snapd
-    snap install postman
+    if [ "$DO_INSTALL_POSTMAN" = true ] ; then
+        show_info "Installing postman... "
+        apt-get install -y -q snapd
+        snap install postman
+    fi
 }
 
 inst_mqttexplorer() {
-    show_info "Installing mqtt-explorer... "
-    apt-get install -y -q snapd
-    snap install mqtt-explorer
+    if [ "$DO_INSTALL_MQTTEXPLORER" = true ] ; then
+        show_info "Installing mqtt-explorer... "
+        apt-get install -y -q snapd
+        snap install mqtt-explorer
+    fi
 }
 
 inst_rocketchat() {
@@ -90,24 +109,56 @@ inst_rocketchat() {
 }
 
 inst_ngrok(){
-    show_info "Installing ngrok... "
-    apt-get install -y -q snapd
-    snap install ngrok
+    if [ "$DO_INSTALL_NGROK" = true ] ; then
+        show_info "Installing ngrok... "
+        apt-get install -y -q snapd
+        snap install ngrok
+    fi
 }
 
 inst_jmeter(){
-    show_info "Installing jmeter in /opt... "
-    cd /opt
-    wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.zip
-    unzip apache-jmeter-5.6.3.zip
-    rm apache-jmeter-5.6.3.zip
+    if [ "$DO_INSTALL_JMETER" = true ] ; then
+        show_info "Installing jmeter in /opt... "
+        cd /opt
+        wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.zip
+        unzip apache-jmeter-5.6.3.zip
+        rm apache-jmeter-5.6.3.zip
+    fi
 }
+
+inst_zoom() {
+    if [ "$DO_INSTALL_ZOOM" = true ] ; then
+        show_info "Installing zoom client... "
+        sys_download zoom_amd64.deb https://cdn.zoom.us/prod/5.17.11.3835/zoom_amd64.deb
+        apt -y install ./zoom_amd64.deb
+        rm -f zoom_amd64.deb
+    fi
+}
+
+inst_remmina() {
+    if [ "$DO_INSTALL_REMMINA" = true ] ; then
+        show_info "Installing remmina... "
+        sys_install_package remmina remmina-plugin-rdp remmina-plugin-vnc remmina-plugin-secret
+    fi
+}
+
+inst_forticlient() {
+    if [ "$DO_INSTALL_FORTICLIENT" = true ] ; then
+        show_info "Installing forticlient... "
+        wget -O - https://repo.fortinet.com/repo/forticlient/${FORTICLIENT_VERSION}/debian/DEB-GPG-KEY | gpg --dearmor | sudo tee /usr/share/keyrings/repo.fortinet.com.gpg
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/repo.fortinet.com.gpg] https://repo.fortinet.com/repo/forticlient/${FORTICLIENT_VERSION}/debian/ stable non-free" | tee /etc/apt/sources.list.d/fortinet.list
+        apt-get -y update && apt-get -y install forticlient
+    fi
+}
+
 
 ## MAIN
 inst_squirrel
 inst_soapui
 inst_postman
 inst_mqttexplorer
-#inst_rocketchat
 inst_ngrok
 #inst_jmeter
+inst_zoom
+inst_remmina
+inst_forticlient

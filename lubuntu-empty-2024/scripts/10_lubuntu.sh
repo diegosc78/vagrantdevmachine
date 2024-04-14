@@ -134,7 +134,7 @@ inst_guitools() {
     echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
     sys_wait_for_apt_lock
     apt-get update -y
-    apt-get -y install lxterminal terminator firefox google-chrome-stable filezilla keepass2 meld shutter putty xca
+    apt-get -y install lxterminal terminator firefox google-chrome-stable filezilla shutter putty xca
 
     add-apt-repository -y ppa:unit193/encryption
     apt-get update -y
@@ -144,6 +144,10 @@ inst_guitools() {
     echo "deb http://deb.anydesk.com/ all main" | tee /etc/apt/sources.list.d/anydesk-stable.list
     apt-get update -y
     apt-get -y install anydesk
+
+    add-apt-repository -y ppa:phoerious/keepassxc
+    apt-get update -y
+    apt -y install keepassxc     
 }
 
 inst_lxde() {
@@ -165,7 +169,6 @@ setup_system() {
 sys_full_upgrade
 setup_system
 setup_spanish
-#inst_guestadditions
 inst_clihttpclients
 inst_clicompressors
 inst_cliversioncontroltools

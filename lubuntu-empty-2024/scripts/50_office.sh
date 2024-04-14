@@ -70,19 +70,8 @@ inst_dgrmodelio() {
     rm modelio-open-source-5.4.1_amd64.deb
 }
 
-inst_dgryed() {
-    show_info "Installing yed dgr tool in /opt... "
-    cd /opt
-    wget https://www.yworks.com/resources/yed/demo/yEd-3.23.2_with-JRE20_64-bit_setup.sh
-    chmod +x yEd-3.23.2_with-JRE20_64-bit_setup.sh
-    ./yEd-3.23.2_with-JRE20_64-bit_setup.sh
-}
-
-#TODO balsamiq
-
 ## MAIN
 inst_libreoffice
 inst_dgrmodelio
-#inst_dgryed
 
 

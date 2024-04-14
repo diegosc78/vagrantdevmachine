@@ -62,12 +62,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         devmachine.vm.synced_folder ".", "/vagrant", disabled: false
 
         devmachine.vm.provision "10_lubuntu.sh", type: :shell, path: "scripts/10_lubuntu.sh", privileged: true
+        devmachine.vm.provision "20_dev.sh", type: :shell, path: "scripts/20_dev.sh", privileged: true
         devmachine.vm.provision "35_clients.sh", type: :shell, path: "scripts/35_clients.sh", privileged: true
         devmachine.vm.provision "40_docker.sh", type: :shell, path: "scripts/40_docker.sh", privileged: true
+        devmachine.vm.provision "45_k8scli.sh", type: :shell, path: "scripts/45_k8scli.sh", privileged: true
         devmachine.vm.provision "50_office.sh", type: :shell, path: "scripts/50_office.sh", privileged: true
         devmachine.vm.provision "99_cleanup.sh", type: :shell, path: "scripts/99_cleanup.sh", privileged: true
 
-        devmachine.vm.provision :shell, inline: 'reboot'
+#        devmachine.vm.provision :shell, inline: 'reboot'
     end
 
     config.trigger.after [:provision] do |devmachine|
