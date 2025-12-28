@@ -1,0 +1,79 @@
+# -*- mode: ruby -*-
+# # vi: set ft=ruby :
+
+Vagrant.require_version ">= 2.3.4"
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+IMAGE_NAME = "bento/ubuntu-24.04"
+
+# Plugins used:
+# vagrant plugin install vagrant-disksize
+# vagrant plugin install vagrant-vbguest
+
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    config.vm.provider "virtualbox" do |v|
+        v.gui = true
+        v.memory = 4096
+        v.cpus = 2
+
+        v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        v.customize ["modifyvm", :id, "--graphicscontroller", "vboxvga"]
+        v.customize ["modifyvm", :id, "--ioapic", "on"]
+        v.customize ["modifyvm", :id, "--vrde", "off"]
+        #v.customize ["modifyvm", :id, "--accelerate3d", "on"]
+
+        v.customize ["modifyvm", :id, "--rtcuseutc", "on"]
+        v.customize ["modifyvm", :id, "--hwvirtex", "on"]
+        v.customize ["modifyvm", :id, "--nestedpaging", "on"]
+        v.customize ["modifyvm", :id, "--vtxvpid", "on"]
+        v.customize ["modifyvm", :id, "--largepages", "on"]
+        v.customize ["modifyvm", :id, "--acpi", "on"]
+        v.customize ["modifyvm", :id, "--groups", "/Devel Workstation"]
+
+        # change the network card hardware for better performance
+        v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        v.customize ["modifyvm", :id, "--nictype2", "virtio"]
+
+        # suggested fix for slow network performance
+        # see https://github.com/mitchellh/vagrant/issues/1807
+        v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+
+        v.customize ["modifyvm", :id, "--vram", "128"]
+    end
+
+    if Vagrant.has_plugin?("vagrant-vbguest") then
+        config.vbguest.auto_update = true
+    end
+
+    if Vagrant.has_plugin?("vagrant-disksize") then
+        config.disksize.size = '50GB'
+    end
+
+    config.vm.define "devmachine" do |devmachine|
+        devmachine.vm.box = IMAGE_NAME
+        devmachine.vm.hostname = "devm"
+        devmachine.vm.boot_timeout = 300
+        devmachine.vm.box_check_update = true
+        devmachine.vm.graceful_halt_timeout = 60
+        devmachine.vm.post_up_message = "Login credentials are vagrant/vagrant"
+        devmachine.vm.synced_folder ".", "/vagrant", disabled: false
+
+        devmachine.vm.provision "10_lubuntu.sh", type: :shell, path: "scripts/10_lubuntu.sh", privileged: true
+        devmachine.vm.provision "20_dev.sh", type: :shell, path: "scripts/20_dev.sh", privileged: true
+        devmachine.vm.provision "35_clients.sh", type: :shell, path: "scripts/35_clients.sh", privileged: true
+        devmachine.vm.provision "40_docker.sh", type: :shell, path: "scripts/40_docker.sh", privileged: true
+        devmachine.vm.provision "45_k8scli.sh", type: :shell, path: "scripts/45_k8scli.sh", privileged: true
+        devmachine.vm.provision "50_office.sh", type: :shell, path: "scripts/50_office.sh", privileged: true
+        devmachine.vm.provision "99_cleanup.sh", type: :shell, path: "scripts/99_cleanup.sh", privileged: true
+
+#        devmachine.vm.provision :shell, inline: 'reboot'
+    end
+
+    config.trigger.after [:provision] do |devmachine|
+        devmachine.name = "Reboot after provisioning"
+        devmachine.run = { :inline => "vagrant reload" }
+    end    
+end
